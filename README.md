@@ -1,155 +1,108 @@
-# L.multiControl
-Leaflet plugin to implements layers control with multiple functionality such as opacity, color, bringToFront, bringToBack, zoomToLayer, delete and legend.
+# L.geojson.animate
+A leaflet plugin to use animation.css library in L.geoJSON path
 
-![](https://media.giphy.com/media/G7qJ8OPXH9E77XdVJM/giphy-downsized-large.gif)
-
-### [DEMO](https://serene-heyrovsky-2fb229.netlify.app/)
+### [DEMO](https://magical-salmiakki-ceb60a.netlify.app)
 
 -----------------------------------------------------------------------------------
-## Requirements
-
-<ul>
-  <li>Leaflet</li>
-  <li>Font Awesome</li>
-</ul>
-
-This plugin require font awesome library to display icons in buttons.
 
 ## Install
 
 ### NPM
 
 ```
-npm i leaflet-multicontrol
+npm i @clavijojuan/l.geojson.animate
 ```  
-## Supported features
-<ul>
-  <li>L.marker</li>
-  <li>L.polygon</li>
-  <li>L.GeoJSON</li>
-</ul>
-
-If you want to add support to specific feature please let me know in an issue or pull request.
 
 ## Usage Example
 
-An easy way to implement layers control with multiple functionality. This plugin detects layer properties and will displays buttons (inputs) depend on it.
 
-### Create features
+### Create GeoJSON
 
 ```javascript
-const marker = L.marker([51.5, -0.09]).addTo(map);
-const marker2 = L.marker([51.51, -0.09]);
-const marker3 = L.marker([51.52, -0.09]);
-const polygon = L.polygon([[51.51, -0.1],[51.5, -0.08],[51.53, -0.07],[51.50, -0.06]], {color: '#FF0000'}).addTo(map);
-const polygon2 = L.polygon([[51.51, -0.1],[51.5, -0.08],[51.53, -0.07],[51.50, -0.06]], {color: '#0122FF'}).addTo(map);
 
-const mylines = [{
-    "type": "LineString",
-    "coordinates": [[-0.1,51.51], [-0.07,51.53]]
-}, {
-    "type": "LineString",
-    "coordinates": [[-0.1,51.5], [-0.07,51.50]]
-}];
-const geojson = L.geoJSON(null).addTo(map);
-geojson.addData(mylines);
+const geojson = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          -72.62643718297807,
+          3.373145129411
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          -78.16592396776628,
+          2.906924574441902
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -75.84545414243195,
+              1.9330250737532424
+            ],
+            [
+              -70.70290573798076,
+              1.9330250737532424
+            ],
+            [
+              -70.70290573798076,
+              2.06129365468324
+            ],
+            [
+              -75.84545414243195,
+              2.06129365468324
+            ],
+            [
+              -75.84545414243195,
+              1.9330250737532424
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      }
+    }
+  ]
+}
 
-const states = [{
-    "type": "Feature",
-    "properties": {"party": "Republican"},
-    "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-            [-104.05, 48.99],
-            [-97.22,  48.98],
-            [-96.58,  45.94],
-            [-104.03, 45.94],
-            [-104.05, 48.99]
-        ]]
-    }
-}, {
-    "type": "Feature",
-    "properties": {"party": "Democrat"},
-    "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-            [-109.05, 41.00],
-            [-102.06, 40.99],
-            [-102.03, 36.99],
-            [-109.04, 36.99],
-            [-109.05, 41.00]
-        ]]
-    }
-}, {
-    "type": "Feature",
-    "properties": {"party": "Democrat"},
-    "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-            [-109.05, 41.00],
-            [-102.06, 40.99],
-            [-102.03, 36.99],
-            [-109.04, 36.99],
-            [-109.05, 41.00]
-        ]]
-    }
-}];
-
-const geojsonStates = L.geoJSON(states, {style: function(state) {
-    return (state.properties.party === 'Republican') 
-            ? {fillColor:'red', color:'red', opacity:1, legendLabel: state.properties.party} : {fillColor:'blue', color:'blue', opacity:1, legendLabel: state.properties.party}
-}}).addTo(map);
+const geoJsonLayer = L.geoJSON(geojson).addTo(map);
 
 ```
 
 ### Implements
 
 ```javascript
-const overlays = [
-    {name: 'Marker', layer: marker},
-    {name: 'Marker2', layer: marker2},
-    {name: 'polygon', layer: polygon},
-    {name: 'polygon2', layer: polygon2},
-    {name: 'geojson', layer: geojson},
-    {name: 'geojsonStates', layer: geojsonStates},
-];
-
-const legend = L.multiControl(overlays, {position:'topright', label: 'Control de capas'}).addTo(map);
+geoJsonLayer.animate({
+    type:'rotateOut',
+    repeat: 'infinite',
+    speed: 'slower',
+    delay: undefined
+})
 ```
-#### Note: If you have a geojson with classification representation (such as example "geojsonStates") and you want visualize it in legend, you should add "legendLabel" property in L.path config that are included in style function.
 
-L.multiControl receives two arguments:
-<ul>
-  <li>The first is an array of overlays objects</li>
-  <li>The second is an object with control options</li>
-</ul>
 
-### Overlay config
+### animate method
 
 | Property | Type   | Required  | Description                         |
 | ------------|--- | -------- | ----------------------------------------- |
-| name | String |true| Name of the layer. |
-| layer     | Leaflet layer | true     | A leaflet layer included in Supported features |
+| type | String | false | type of animation (see [animate.css documentation](https://animate.style/)) |
+| repeat     | string or number | false     | Values: 'infinite', 1, 2, 3 |
+| speed     | string | false     | Values: 'slow', 'slower, 'fast', 'faster' |
+| delay     | undefined or string | false     | Values: '2s', '3s', '4s', '5s', undefined |
 
 
-### Options
-| Option	  | Type | Default  | Description                       |
-| ------------|--- | -------- | ----------------------------------------- |
-| position	  |String | 'topright'    | Position of the control. Options: [leaflet control positions](https://docs.eegeo.com/eegeo.js/v0.1.665/docs/leaflet/L.Control/#control-positions) |
-| label	  |String | 'Layer Control'    | Label that will be display in the header |
-
-## Methods
-
-| Method	  |  Description                       |
-| ------------|----------------------------------------- |
-| toggle()	   | Method to collapse / expand the control |
-| addOverlay(overlay config)	   | Method to add Overlay into control |
-
-## Rules
-
-<ul>
-  <li>Layers names must be unique</li>
-</ul>
-  
-
-
+#### NOTE: Plugin only works with PATH of each layer in L.geoJSON, markers will not work.
