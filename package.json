@@ -1,6 +1,6 @@
 {
   "name": "@clavijojuan/l.geojson.animate",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Leaflet plugin to animate geojson path with animate.css library",
   "main": "src/L.geojson.animate.js",
   "scripts": {
